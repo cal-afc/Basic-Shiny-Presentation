@@ -1,0 +1,64 @@
+---
+title: "Homework 8 Presentation"
+author: "Cal and Evan"
+date: "10/11/2018"
+output: ioslides_presentation
+widescreen: TRUE
+runtime: shiny
+---
+```{r, setup, include = FALSE}
+library(tidyverse)
+library(AER)
+data = diamonds
+```
+
+***
+
+```{r, echo = FALSE}
+inputPanel(
+  selectInput("Fill", label = "Diamond Variable:",
+              choices = c("Diamond Clarity" = "clarity",
+                          "Diamond Color" = "color",
+                          "Quality of Cut" = "cut"), selected = "clarity"),
+  radioButtons("xvar", label = "X Variable:",
+               choices = c("Price" = "price", 
+                                        "Carat" = "carat"),
+               selected = "price"),
+  sliderInput("dollar", label = "Price Range:",
+              min = 0, max = 20000, value = c(0, 20000), step = 500),
+  sliderInput("carrot", label = "Carat Range:",
+              min = 0, max = 2.6, value = c(0, 2.6), step = .2)
+  )
+
+renderPlot({
+    ggplot(data = filter(diamonds, 
+                         price > input$dollar[1] &
+                          price < input$dollar[2],
+                         carat > input$carrot[1] &
+                           carat < input$carrot[2])) +
+    geom_histogram(mapping = aes_string(x = input$xvar, 
+                                        fill = input$Fill)) +
+    labs(
+      title = "Data from Diamonds Dataset",
+      x = "XVar Choice",
+      y = "Diamond Count"
+    )
+  })
+```
+
+***
+
+New Stuff that we used:
+
+- Able to choose x-variable
+  -Set x to vary with the radio button choice
+  
+  radioButtons("xvar", label = "X Variable",
+  choices = c("Price" = "price",
+  "Carat" = "carat"), selected = "price")
+  
+-Able to set range of values based on x variables
+  - Had to filter diamond dataset to conform to our x variable length, otherwise get     error saying it's incorrect length
+  
+  sliderInput("name for r", label = "Title for Presentation",
+              min = x1, max = x2, value(range1, range2), step = seperation value)
